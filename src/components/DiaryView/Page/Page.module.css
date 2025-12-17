@@ -1,0 +1,187 @@
+.page {
+  background-color: #fffcf0;
+  width: 100%;
+  aspect-ratio: 210 / 297;
+  max-width: 700px;
+  min-height: 70vh;
+  max-height: 80vh;
+  margin: 0 auto;
+  padding: 25px 15px 25px 45px; /* top, right (15px), bottom, left (45px for red line) */
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden; 
+  font-family: 'Courier New', Courier, monospace;
+  line-height: 1.8;
+  font-size: 16px;
+  color: #333;
+  border-radius: 3px;
+  transform-style: preserve-3d; 
+  backface-visibility: hidden; 
+  cursor: default; /* Default cursor for the page content area */
+}
+
+/* New class for when hovering over draggable edge zones */
+.page.canDrag { 
+  cursor: grab;
+}
+
+.page.isDragging { 
+  cursor: grabbing !important; /* Ensure grabbing cursor overrides others during drag */
+  user-select: none; 
+}
+
+
+body.dark-theme .page {
+  background-color: #2c2c3e;
+  color: #c0c0d0;
+  box-shadow: 0 0 15px rgba(0,0,0,0.4);
+}
+
+.pageDate {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 0.85em;
+  color: #555;
+  font-style: italic;
+  z-index: 2;
+  user-select: none; 
+}
+
+body.dark-theme .pageDate {
+  color: #aaa;
+}
+
+.leftMarginLine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 40px; /* Position of the red line from the left edge of .page */
+  width: 1px;
+  background-color: #ffaaaa;
+  z-index: 0;
+}
+
+body.dark-theme .leftMarginLine {
+  background-color: #885555;
+}
+
+.ruledLinesContainer {
+  position: absolute;
+  top: 40px;    /* Content starts below the date area */
+  left: 45px;   /* To the right of the red margin line */
+  right: 15px;  /* Right padding of the page */
+  bottom: 25px; /* Bottom padding of the page */
+  z-index: 0; 
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.ruleLine {
+  height: 1.8em; /* Should match editorArea's effective line-height */
+  border-bottom: 1px solid #d0e0ff; /* Light blue lines */
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+body.dark-theme .ruleLine {
+  border-bottom: 1px solid #405077; 
+}
+
+.editorArea {
+  position: absolute;
+  top: 40px;    /* Aligns with the top of .ruledLinesContainer */
+  left: 45px;   /* Aligns with the left of .ruledLinesContainer */
+  right: 15px;  /* Aligns with the right of .ruledLinesContainer */
+  height: calc(1.8em * 18); /* MAX_LINES = 18. This is critical for overflow. */
+  z-index: 1;   
+  
+  outline: none;
+  white-space: pre-wrap; 
+  word-wrap: break-word; 
+  
+  margin: 0;
+  padding: 0; /* Crucial: No internal padding to ensure text starts on the line */
+  
+  overflow-y: hidden !important; 
+  overflow-x: hidden; 
+  
+  box-sizing: border-box; 
+
+  font-family: inherit; 
+  font-size: inherit;   
+  line-height: inherit; /* This makes text sit on the lines */
+  color: inherit;       
+  caret-color: #5a3e8d; 
+  cursor: text; /* Standard text input cursor */
+}
+
+body.dark-theme .editorArea {
+  caret-color: #a991d4;
+  color: #c0c0d0; 
+}
+
+.editorArea:focus {
+  outline: none; 
+}
+
+.pageAnimating { 
+  transition: none !important; 
+}
+
+@keyframes curlNextRealisticFinal {
+  0% {
+    transform-origin: 0% 50%; 
+    transform: perspective(2000px) translateX(0%) rotateY(0deg) scale(1);
+    opacity: 1;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  30% {
+    transform: perspective(2000px) translateX(-25%) rotateY(-30deg) scale(0.95) ;
+    opacity: 0.95;
+    box-shadow: 8px 5px 25px rgba(0,0,0,0.15); 
+  }
+  100% {
+    transform-origin: 0% 50%;
+    transform: perspective(2000px) translateX(-110%) rotateY(-150deg) scale(0.5);
+    opacity: 0;
+    box-shadow: 30px 15px 50px rgba(0,0,0,0.3);
+  }
+}
+
+.pageCurlNextFinal {
+  animation: curlNextRealisticFinal 0.5s ease-in-out forwards;
+  z-index: 20; 
+}
+
+
+@keyframes curlPrevRealisticFinal {
+  0% {
+    transform-origin: 100% 50%; 
+    transform: perspective(2000px) translateX(0%) rotateY(0deg) scale(1);
+    opacity: 1;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  30% {
+    transform: perspective(2000px) translateX(25%) rotateY(30deg) scale(0.95);
+    opacity: 0.95;
+    box-shadow: -8px 5px 25px rgba(0,0,0,0.15); 
+  }
+  100% {
+    transform-origin: 100% 50%;
+    transform: perspective(2000px) translateX(110%) rotateY(150deg) scale(0.5);
+    opacity: 0;
+    box-shadow: -30px 15px 50px rgba(0,0,0,0.3);
+  }
+}
+
+.pageCurlPrevFinal {
+  animation: curlPrevRealisticFinal 0.5s ease-in-out forwards;
+  z-index: 20;
+}
+
+body.dark-theme .pageCurlNextFinal,
+body.dark-theme .pageCurlPrevFinal {
+   box-shadow: 0 15px 50px rgba(0,0,0,0.7) !important;
+}
